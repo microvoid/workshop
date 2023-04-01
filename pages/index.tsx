@@ -1,9 +1,8 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useState } from 'react'
+import { changeTheme, useTheme, Container, Input, Loading, Button, Text } from '@nextui-org/react'
+import { Send, User, Moon, Sun, RefreshCcw } from 'lucide-react'
+import { SigninModal } from '@/components'
 
 export default function Home() {
   return (
@@ -14,110 +13,73 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
-        </div>
+      <main className="h-screen flex flex-col text-neutral-600">
+        <section className="w-full h-16 flex items-center">
+          <Header />
+        </section>
 
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
+        <section className="w-full md:mt-20">
+          <MagicBoxWrapper />
+        </section>
       </main>
     </>
+  )
+}
+
+function Header() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Container display="flex" className="gap-2">
+      <User className="cursor-pointer" onClick={() => setOpen(true)} />
+      <ThemeMode />
+
+      <SigninModal open={open} onOpenChange={setOpen} />
+    </Container>
+  )
+}
+
+function ThemeMode() {
+  const { isDark } = useTheme()
+
+  const handleChange = () => {
+    const nextTheme = isDark ? 'light' : 'dark'
+
+    window.localStorage.setItem('data-theme', nextTheme)
+
+    changeTheme(nextTheme)
+  }
+
+  return (
+    <div className="cursor-pointer" onClick={handleChange}>
+      {isDark ? <Sun /> : <Moon />}
+    </div>
+  )
+}
+
+function MagicBoxWrapper() {
+  const [loading, setLoading] = useState(false)
+
+  return (
+    <Container>
+      <div className="flex items-center">
+        <div className="md:w-1/3">
+          <Input
+            autoFocus
+            underlined
+            fullWidth
+            color="primary"
+            labelLeft={<Text b>ChatGPT</Text>}
+            placeholder="Next UI"
+          />
+        </div>
+        <Button auto light onClick={() => setLoading(!loading)}>
+          {loading ? <Loading type="points" color="currentColor" size="sm" /> : <Send />}
+        </Button>
+        <Button auto light>
+          <RefreshCcw />
+        </Button>
+      </div>
+    </Container>
   )
 }
