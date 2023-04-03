@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import { useState } from 'react'
-import { changeTheme, useTheme, Container, Input, Loading, Button, Text } from '@nextui-org/react'
-import { Send, User, Moon, Sun, RefreshCcw } from 'lucide-react'
-import { SigninModal } from '@/components'
+import { Container, Input, Loading, Button, Text } from '@nextui-org/react'
+import { Send, User, RefreshCcw } from 'lucide-react'
+import { SigninModal, ThemeMode } from '@/components'
 
 export default function Home() {
   return (
@@ -34,26 +34,8 @@ function Header() {
       <User className="cursor-pointer" onClick={() => setOpen(true)} />
       <ThemeMode />
 
-      <SigninModal open={open} onOpenChange={setOpen} />
+      <SigninModal defaultAction="signin" open={open} onOpenChange={setOpen} />
     </Container>
-  )
-}
-
-function ThemeMode() {
-  const { isDark } = useTheme()
-
-  const handleChange = () => {
-    const nextTheme = isDark ? 'light' : 'dark'
-
-    window.localStorage.setItem('data-theme', nextTheme)
-
-    changeTheme(nextTheme)
-  }
-
-  return (
-    <div className="cursor-pointer" onClick={handleChange}>
-      {isDark ? <Sun /> : <Moon />}
-    </div>
   )
 }
 
