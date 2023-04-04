@@ -7,6 +7,7 @@ services:
     volumes:
       - ./rs-init.sh:/scripts/rs-init.sh
       - ./init.js:/scripts/init.js
+      - mongo-rs-data:/data/db
     networks:
       - mongo-rs-network
     ports:
@@ -21,6 +22,8 @@ services:
   mongo-rs-1:
     container_name: mongo-rs-1
     image: mongo:4.4
+    volumes:
+      - mongo-rs-1-data:/data/db
     networks:
       - mongo-rs-network
     ports:
@@ -31,3 +34,7 @@ services:
 networks:
   mongo-rs-network:
     driver: bridge
+
+volumes:
+  mongo-rs-data:
+  mongo-rs-1-data:
