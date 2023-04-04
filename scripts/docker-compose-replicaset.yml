@@ -12,6 +12,9 @@ services:
       - mongo-rs-network
     ports:
       - 24100:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=mongoprod
     depends_on:
       - mongo-rs-1
     links:
