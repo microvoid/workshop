@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mongo-rs:
+    container_name: mongo-rs
+    image: mongo:4.4
+    volumes:
+      - ./rs-init.sh:/scripts/rs-init.sh
+      - ./init.js:/scripts/init.js
+    networks:
+      - mongo-rs-network
+    ports:
+      - 24100:27017
+    depends_on:
+      - mongo-rs-1
+    links:
+      - mongo-rs-1
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "mongodb-rs" ]
+
+  mongo-rs-1:
+    container_name: mongo-rs-1
+    image: mongo:4.4
+    networks:
+      - mongo-rs-network
+    ports:
+      - 24101:27017
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "mongodb-rs" ]
+
+networks:
+  mongo-rs-network:
+    driver: bridge
